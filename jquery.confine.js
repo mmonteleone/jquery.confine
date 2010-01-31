@@ -11,6 +11,7 @@
   */
 (function($){    
     var eventName = 'maxlength', 
+        currentJqSupportsLive = Number($.fn.jquery.split('.').slice(0,2).join('.')) >= 1.4,
         inChord = function(e) {
             return !!e.ctrlKey || 
                 !!e.ctrlLeft || 
@@ -51,10 +52,14 @@
     $.fn.confine = function(options) {
         var settings = $.extend({}, $.fn.confine.defaults, options || {});
 
-        var area, max;
+        if(!currentJqSupportsLive && settings.live) {
+            throw("Use of the live option requires jQuery 1.4 or greater");
+        }
+
+        var area, max, binder = settings.live ? 'live' : 'bind';  
         
         return this
-            .bind('keydown', function(e){
+            [binder]('keydown', function(e){
                 area = $(this);
                 if(!inChord(e) && 
                     !isControlKey(e.keyCode) && 
@@ -64,7 +69,7 @@
                     return false;
                 }
             })
-            .bind('paste', function(){
+            [binder]('paste', function(){
                 var area = $(this);
                 settings.global.setTimeout(function(){ 
                     clip(area, settings.maxlength); 
@@ -83,6 +88,7 @@
         version: '0.9.0',
         defaults: {
             maxlength: null, 
+            live: currentJqSupportsLive,
             selector: 'textarea',
             global: window
         }
