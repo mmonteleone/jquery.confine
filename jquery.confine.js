@@ -1,7 +1,7 @@
  /**
   * jQuery.confine - Textarea maxlength, Done Right.
   *
-  * version 0.9.0
+  * version 0.9.1
   *
   * http://michaelmonteleone.net/projects/confine
   * http://github.com/mmonteleone/jquery.confine
@@ -51,7 +51,6 @@
         
     $.fn.confine = function(options) {
         var settings = $.extend({}, $.fn.confine.defaults, options || {});
-
         if(!currentJqSupportsLive && settings.live) {
             throw("Use of the live option requires jQuery 1.4 or greater");
         }
@@ -61,9 +60,10 @@
         return this
             [binder]('keydown', function(e){
                 area = $(this);
+                max = area.attr(settings.attribute) || settings.maxlength;
                 if(!inChord(e) && 
                     !isControlKey(e.keyCode) && 
-                    area.val().length >= settings.maxlength) 
+                    area.val().length >= max) 
                 {
                     area.trigger(eventName);
                     return false;
@@ -72,12 +72,14 @@
             [binder]('paste', function(){
                 var area = $(this);
                 settings.global.setTimeout(function(){ 
-                    clip(area, settings.maxlength); 
+                    max = area.attr(settings.attribute) || settings.maxlength;
+                    clip(area, max); 
                 }, 1);
             })
             .each(function(){
                 area = $(this);
-                clip(area, settings.maxlength);
+                max = area.attr(settings.attribute) || settings.maxlength;
+                clip(area, max);
             });
     };
     $.confine = function(options){
@@ -85,10 +87,11 @@
     };
     
     $.extend($.fn.confine, {
-        version: '0.9.0',
+        version: '0.9.1',
         defaults: {
             maxlength: null, 
             live: currentJqSupportsLive,
+            attribute: 'data-maxlength',
             selector: 'textarea',
             global: window
         }
