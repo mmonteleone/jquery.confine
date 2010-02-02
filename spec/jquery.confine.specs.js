@@ -74,6 +74,9 @@ QUnit.specify("jQuery.confine", function() {
                     assert($.fn.confine.defaults.live).isFalse("should be false");                        
                 }                
             });
+            it("should have a default attribute of 'data-maxlength'", function(){
+                assert($.fn.confine.defaults.attribute).equals('data-maxlength');
+            })
         });
         describe("upon initial activation", function(){
             before(function(){
@@ -387,6 +390,50 @@ QUnit.specify("jQuery.confine", function() {
                         assert($('textarea').val()).equals('abcdexyz12');
                     });
                 });
+            });
+        });
+        describe("when length declared in data attribute", function(){
+            after(function(){
+                FormBuilder.clear();                
+            });
+            it("should override passed maxlength on activation", function(){
+                var area = FormBuilder.addTextArea('t1','abcde');
+                area.attr('custom-maxlength-attr', 3);
+                var events = [];
+                $('textarea')
+                    .bind('maxlength', function(){
+                        events.push(this);                        
+                    })
+                    .confine({maxlength:10,attribute:'custom-maxlength-attr'});
+                assert(events.length).equals(1);
+                assert(area.val()).equals('abc');
+            });
+            it("should override passed maxlength on typing", function(){
+                var area = FormBuilder.addTextArea('t1','ab');
+                area.attr('custom-maxlength-attr', 3);
+                var events = [];
+                $('textarea')
+                    .bind('maxlength', function(){
+                        events.push(this);                        
+                    })
+                    .confine({maxlength:10,attribute:'custom-maxlength-attr'})
+                    .autotype('cd');
+                assert(events.length).equals(1);
+                assert(area.val()).equals('abc');                
+            });
+            it("should override passed maxlength on pasting",function(){
+                var area = FormBuilder.addTextArea('t1','ab');
+                area.attr('custom-maxlength-attr', 3);
+                var events = [];
+                $('textarea')
+                    .bind('maxlength', function(){
+                        events.push(this);
+                    })
+                    .confine({maxlength:10,attribute:'custom-maxlength-attr', global:fakeGlobal})
+                    .simulatePaste('wxyz');
+                DeLorean.advance(10);                    
+                assert(events.length).equals(1);
+                assert(area.val()).equals('abw');
             });
         });
         if(is14OrGreater) {
