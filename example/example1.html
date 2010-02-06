@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>untitled</title>
+<script src="../lib/jquery-1.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../jquery.confine.js" type="text/javascript" charset="utf-8"></script>
+<title>jQuery.confine Example 1</title>
+<style type="text/css" media="screen">
+textarea {
+    width: 250px;
+    height: 70px;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 3px;
+    border: 1px solid #777;
+    }
+</style>
+<script type="text/javascript" charset="utf-8">
+
+
+$(function(){
+    
+function log(message) {
+    $('#log').html($('#log').html()+"\n"+message);
+};
+
+$('textarea')
+    .confine({maxlength:50})
+    .bind('maxlength', function(){
+        log('maxlength event raised by plugin on ' + this);
+    });
+        
+});
+    
+</script>
+</head>
+<body>
+    
+<h1 id="jquery.confine_examples">jQuery.confine Example 1</h1>
+
+<p>This example demonstrates explicitly confining a textarea via options passed to the jQuery.confine plugin.</p>
+
+<p>Steps to test: </p>
+<ol>
+    <li>Try typing in more than 50 characters, note the triggering of the 'maxlength' event</li>
+    <li>Once the maximum is met, note that other keystrokes are blocked, not just trimmed.  </li>
+    <li>While still at the maximum, note that modifiers and control keys can still be used (ctrl-x, ctrl-v, delete, etc)</li>
+    <li>While still at the maximum, place the cursor in the middle of the block of text and note that typing does not truncate the tail end of the text</li>
+</ol>
+
+<form action="/" method="GET">
+    <textarea name="example1"></textarea>
+</form>
+
+
+<h3>Log</h3>
+<pre id="log">
+</pre>
+
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>untitled</title>
+<script src="../lib/jquery-1.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../jquery.confine.js" type="text/javascript" charset="utf-8"></script>
+<title>jQuery.confine Example 1</title>
+<style type="text/css" media="screen">
+textarea {
+    width: 250px;
+    height: 70px;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 3px;
+    border: 1px solid #777;
+    }
+</style>
+<script type="text/javascript" charset="utf-8">
+
+
+$(function(){
+
+// when using the $.confine syntax, the selector 'textarea' is assumed
+$.confine();
+  
+$('#add_another').click(function(){
+    $('form').append('<div><h3>Dynamically-Added Textarea with data-maxlength attribute of 10</h3><textarea name="example1" data-maxlength="10"></textarea></div>');
+    return false;
+});
+
+        
+});
+    
+</script>
+</head>
+<body>
+    
+<h1 id="jquery.confine_examples">jQuery.confine Example 2</h1>
+
+<p>This example demonstrates
+<ol>
+    <li>implicitly confining a textarea via HTML5 data attributes on the textareas</li>
+    <li>Support for confining dynamically added textareas <em>after</em> the plugin activation</li>
+</ol>
+
+<p>Steps to test: </p>
+<ol>
+    <li>Try typing in more than the maximum characters for each textarea</li>
+    <li>Note that each has a separate maximum, defined by their data-maxlength HTML5 attributes</li>
+    <li>Click 'Add Another Textarea' to dynamically add more fields, and note they are also confined by their attributes, even though they were created after the confine plugin was initialized.</li>
+</ol>
+
+<form action="/" method="GET">
+    <div>
+        <h3>TextArea with data-maxlength attribute of 50</h3>
+        <textarea name="example1" data-maxlength="50"></textarea>        
+    </div>
+    <div>
+        <h3>TextArea with data-maxlength attribute of 20</h3>
+        <textarea name="example1" data-maxlength="20"></textarea>        
+    </div>
+</form>
+
+<a href="#" id="add_another">Add Another Text Area</a>
+
+
+</body>
+</html>

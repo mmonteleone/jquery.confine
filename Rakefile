@@ -27,7 +27,7 @@ task :build => [:clean] do
   # build dist and lib directories
   mkdir 'dist'
   mkdir 'dist/lib'
-  # mkdir 'dist/example'
+  mkdir 'dist/example'
 
   # copy src
   cp 'jquery.confine.js', 'dist/jquery.confine.js'
@@ -36,7 +36,8 @@ task :build => [:clean] do
   cp 'README.markdown', 'dist/README.markdown'
   
   # copy examples
-  # cp 'example/example1.html', 'dist/example/example1.html'
+  cp 'example/example1.html', 'dist/example/example1.html'
+  cp 'example/example2.html', 'dist/example/example2.html'
 
   # copy lib
   cp 'lib/jquery-1.4.1.min.js', 'dist/lib/jquery-1.4.1.min.js'
