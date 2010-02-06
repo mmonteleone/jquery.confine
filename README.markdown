@@ -3,7 +3,7 @@ jQuery.confine
 Textarea maxlength Done Right.  
 [http://github.com/mmonteleone/jquery.confine][0]
 
-HTML textareas do not natively implement a `maxlength` attribute like text inputs.  jQuery.confine is a simple jQuery plugin which implements this *correctly*, avoiding many of the problems most naive implementations run into.
+HTML textareas do not natively implement a `maxlength` attribute like text inputs.  jQuery.confine is a simple jQuery plugin which implements this *correctly*, avoiding many of the problems most naive implementations run into, while also optionally taking advantage of new HTML5 standards and live event support in jQuery 1.4.
 
 Seriously, textarea maxlength?  Hasn't this problem been solved before?  Like 5,000 times?
 ------------------------------------------------------------------------------
@@ -36,6 +36,8 @@ Benefits of Confine
   * Raises a custom 'maxlength' event on matched textareas whenever a maxlength is reached
   * Enforces maxlength of pasted text
   * Enforces maxlength on initial text already in textareas before changes occur
+  * Optionally supports declaratively stating the maxlength value via an HTML5-valid attribute `data-maxlength`
+  * Supports both jQuery 1.3 and 1.4, but with jQuery 1.4, works in a `live` fashion so that maxlength is enforced on all matched elements, not just the ones in the DOM at the time of activation.
   * Fully unit tested and stable
 
 And this is how you use it:
@@ -47,21 +49,35 @@ And this is how you use it:
     
     $('textarea').confine({maxlength: 250});
     
+**Confines textareas to individual maxlengths defined by HTML5-valid attribute,** `data-maxlength`
+
+    <textarea name="description" data-maxlength="200"></textarea>
+    <textarea name="comments" data-maxlength="500"></textarea>
+    
+    $('textarea').confine();
+
 Requirements, installation, and notes
 -------------------------------------
 
 jQuery.confine requires:
 
-* [jQuery][3] 1.3.2 
+* [jQuery][3] 1.3.2 or greater
 
 You can download the [zipped release][8] containing a minified build with examples and documentation or the development master with unit tests by cloning `git://github.com/mmonteleone/jquery.confine.git`.
 
-jQuery.confine requires [jquery][3] 1.3.2, and [jQuery.confine][9] 0.9 and can be installed thusly 
+jQuery.confine requires [jquery][3] 1.3.2 or greater, and [jQuery.confine][9] 0.9 and can be installed thusly 
 
-    <script type="text/javascript" src="jquery-1.3.2.min.js"></script>
+    <script type="text/javascript" src="jquery-1.4.1.min.js"></script>
     <script type="text/javascript" src="jquery.confine.min.js"></script>
 
 jQuery.confine includes a full unit test suite, and has been verified to work against Firefox 3.5, Safari 4, Internet Explorer 6,7,8, Chrome, and Opera 9 and 10.  Please feel free to test its suite against other browsers.
+
+jQuery 1.4 Bonus
+----------------
+
+Confine works great with jQuery 1.3, but it's even better with 1.4.  When used with jQuery 1.4, jQuery.confine automatically assumes monitoring textareas via `.live()` instead of `.bind()`, allowing for client code to add more textareas after a jQuery.confine activation that will still be bound by confine, as well as allowing for binding to `maxlength` via `.live()` instead of `.bind()`.
+
+This behavior is only available with jQuery 1.4 and can be overridden by specifying the 'live' boolean option.
 
 Complete API
 ------------
@@ -78,6 +94,14 @@ Confining matched text areas to 250 characters:
 
     $('textarea').confine({maxlength: 250});
     
+If textareas have an HTML5-valid data-maxlength attribute, can simply call:
+
+    // assuming...
+    <textarea data-maxlength="250"></textarea>
+    <textarea data-maxlength="300"></textarea>
+    
+    $('textarea').confine();   
+
 As a shortcut,    
 
     $.confine(options);  
@@ -86,10 +110,14 @@ is an alias for `$('textarea').confine(options);`
 
 ### Options
 
-* **maxlength**: The maxlength to apply to matched textareas.  
+* **maxlength**: The maxlength to apply to matched textareas.  If textareas provide their own maxlength via the `data-maxlength` attribute, they will override this value.
   * *default*: *undefined*
 * **selector**: default selector when using the `$.confine()` shortcut activation
   * *default*: `'textarea'`
+* **attribute**: Name of the optional attribute to look for on matched textareas to provide a maxlength value.  When available, overrides the `maxlength` value passed through the `confine()` activation call.
+  * *default*: `'data-maxlength'`  Custom attributes beginning with 'data-' are considered valid in HTML5.
+* **live**: whether to monitor matched text areas via `live` instead of `bind`, allowing for live binding of `maxlength` by calling code and for confining of matching textareas added to the DOM after activation.
+  * *default*: `true` when using jQuery 1.4 or greater.  `false` otherwise.  Passing `true` without jQuery 1.4 or greater throws an exception.
 
 
 ### Events
@@ -120,6 +148,7 @@ The following build tasks are available:
 Changelog
 ---------
 
+* 0.9.1 - Added jQuery 1.4.1 live support and html5 data attribute support
 * 0.9.0 - Initial Release
 
 License
