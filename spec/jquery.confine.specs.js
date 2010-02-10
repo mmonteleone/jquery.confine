@@ -177,6 +177,10 @@ QUnit.specify("jQuery.confine", function() {
                     $('textarea').confine({maxlength:3});
                     assert($('textarea').val()).equals('abc');
                 });
+                it("should not confine when neither maxlength attribute nor option passed", function() {
+                    $('textarea').confine();
+                    assert($('textarea').val()).equals('abcde');                    
+                });
             });
         });
         describe("upon typing", function(){
@@ -263,6 +267,12 @@ QUnit.specify("jQuery.confine", function() {
                         .autotype('vwxyz{{ctrl}}a{{/ctrl}}{{meta}}a{{/meta}}{{ctrl}}c{{/ctrl}}');
                     assert(events.length).equals(0);                    
                 });
+                it("should not confine when neither maxlength attribute nor option passed", function() {
+                    $('textarea')
+                        .confine()
+                        .autotype('fghijklmnop');
+                    assert($('textarea').val()).equals('abcdefghijklmnop');
+                });                
             });
         });
         describe("upon pasting", function(){
@@ -388,6 +398,13 @@ QUnit.specify("jQuery.confine", function() {
                             .simulatePaste('xyz12');
                         DeLorean.advance(10);
                         assert($('textarea').val()).equals('abcdexyz12');
+                    });
+                    it("should not confine when neither maxlength attribute nor option passed", function() {
+                        $('textarea')
+                            .confine()
+                            .simulatePaste('fghijklmnop');
+                        DeLorean.advance(10);
+                        assert($('textarea').val()).equals('abcdefghijklmnop');
                     });
                 });
             });

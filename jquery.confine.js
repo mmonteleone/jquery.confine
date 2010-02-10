@@ -1,7 +1,7 @@
  /**
   * jQuery.confine - Textarea maxlength, Done Right.
   *
-  * version 0.9.1
+  * version 0.9.2
   *
   * http://michaelmonteleone.net/projects/confine
   * http://github.com/mmonteleone/jquery.confine
@@ -88,14 +88,16 @@
                 // use the textarea's maxlength attribute value if there,
                 // otherwise, the explicitly passed `maxlength` option
                 max = area.attr(settings.attribute) || settings.maxlength;
-                // if at max length, only allow non character keys or 
-                // character keys that occurred with modifiers
-                if(!inChord(e) && 
-                    !isControlKey(e.keyCode) && 
-                    area.val().length >= max) 
-                {
-                    area.trigger(eventName);
-                    return false;
+                if(max !== null) {
+                    // if at max length, only allow non character keys or 
+                    // character keys that occurred with modifiers
+                    if(!inChord(e) && 
+                        !isControlKey(e.keyCode) && 
+                        area.val().length >= max) 
+                    {
+                        area.trigger(eventName);
+                        return false;
+                    }                    
                 }
             })
             // bind via `live` or `bind` depending on jquery version
@@ -106,7 +108,7 @@
                 // before clipping
                 settings.global.setTimeout(function(){ 
                     max = area.attr(settings.attribute) || settings.maxlength;
-                    clip(area, max); 
+                    if(max !== null) { clip(area, max); }
                 }, 1);
             })
             .each(function(){
@@ -114,7 +116,7 @@
                 // for all matched textareas
                 area = $(this);
                 max = area.attr(settings.attribute) || settings.maxlength;
-                clip(area, max);
+                if(max !== null) { clip(area, max); }
             });
     };
     /**
@@ -128,7 +130,7 @@
     };
     
     $.extend($.fn.confine, {
-        version: '0.9.1',
+        version: '0.9.2',
         defaults: {
             // maxlength to apply to matched textareas.  If textareas provide 
             // their own maxlength via the `data-maxlength` attribute, they will override this value.

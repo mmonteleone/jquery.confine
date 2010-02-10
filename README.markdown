@@ -148,6 +148,7 @@ The following build tasks are available:
 Changelog
 ---------
 
+* 0.9.2 - Changed behavior for when `confine()` is applied without `maxlength` option to a textarea that also has no `data-maxlength` attribute -- no longer confines to 0 nor any other assumed max length in this scenario.
 * 0.9.1 - Added jQuery 1.4.1 live support and html5 data attribute support
 * 0.9.0 - Initial Release
 
